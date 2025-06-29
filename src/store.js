@@ -1,32 +1,79 @@
-export const initialStore=()=>{
-  return{
-    message: null,
-    todos: [
-      {
-        id: 1,
-        title: "Make the bed",
-        background: null,
-      },
-      {
-        id: 2,
-        title: "Do my homework",
-        background: null,
-      }
-    ]
-  }
-}
+const getState = ({ getStore, getActions, setStore }) => {
+    return {
+        store: {
+            people: [],
+            planets: [],
+            vehicles: [],
+            favorites: [],
+            singleItem: null, // Para los detalles individuales
+        },
 
-export default function storeReducer(store, action = {}) {
-  switch(action.type){
-    case 'add_task':
+        actions: {
+            // Cargar personas
+            getPeople: async () => {
+                try {
+                    const res = await fetch("https://www.swapi.tech/api/people");
+                    const data = await res.json();
+                    setStore({ people: data.results });
+                } catch (error) {
+                    console.error("Error cargando personas:", error);
+                }
+            },
 
-      const { id,  color } = action.payload
+            // Cargar planetas
+            getPlanets: async () => {
+                try {
+                    const res = await fetch("https://www.swapi.tech/api/planets");
+                    const data = await res.json();
+                    setStore({ planets: data.results });
+                } catch (error) {
+                    console.error("Error cargando planetas:", error);
+                }
+            },
 
-      return {
-        ...store,
-        todos: store.todos.map((todo) => (todo.id === id ? { ...todo, background: color } : todo))
-      };
-    default:
-      throw Error('Unknown action.');
-  }    
-}
+            // Cargar vehículos
+            getVehicles: async () => {
+                try {
+                    const res = await fetch("https://www.swapi.tech/api/vehicles");
+                    const data = await res.json();
+                    setStore({ vehicles: data.results });
+                } catch (error) {
+                    console.error("Error cargando vehículos:", error);
+                }
+            },
+
+            // Obtener detalles individuales (persona, planeta o vehículo)
+            getSingleItem: async (type, uid) => {
+                try {
+                    const res = await fetch(`https://www.swapi.tech/api/${type}/${uid}`);
+                    const data = await res.json();
+                    setStore({ singleItem: data.result });
+                } catch (error) {
+                    console.error("Error cargando detalle:", error);
+                }
+            },
+
+            // Agregar a favoritos
+            addFavorite: (item) => {
+                const store = getStore();
+                const exists = store.favorites.some(
+                    fav => fav.uid === item.uid && fav.type === item.type
+                );
+                if (!exists) {
+                    setStore({ favorites: [...store.favorites, item] });
+                }
+            },
+
+            // Quitar de favoritos
+            removeFavorite: (uid, type) => {
+                const store = getStore();
+                const newFavorites = store.favorites.filter(
+                    fav => fav.uid !== uid || fav.type !== type
+                );
+                setStore({ favorites: newFavorites });
+            }
+        }
+    };
+};
+
+export default getState;

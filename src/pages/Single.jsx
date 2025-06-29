@@ -1,37 +1,56 @@
-// Import necessary hooks and components from react-router-dom and other libraries.
-import { Link, useParams } from "react-router-dom";  // To use link for navigation and useParams to get URL parameters
-import PropTypes from "prop-types";  // To define prop types for this component
-import rigoImageUrl from "../assets/img/rigo-baby.jpg"  // Import an image asset
-import useGlobalReducer from "../hooks/useGlobalReducer";  // Import a custom hook for accessing the global state
+import { useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
+import useGlobalReducer from "../hooks/useGlobalReducer";
 
-// Define and export the Single component which displays individual item details.
-export const Single = props => {
-  // Access the global state using the custom hook.
-  const { store } = useGlobalReducer()
+export const Single = () => {
+  const { store, actions } = useGlobalReducer();
+  const { type, uid } = useParams(); // 👈 capturamos ambos desde la URL
 
-  // Retrieve the 'theId' URL parameter using useParams hook.
-  const { theId } = useParams()
-  const singleTodo = store.todos.find(todo => todo.id === parseInt(theId));
+  useEffect(() => {
+    actions.getSingleItem(type, uid);
+  }, [type, uid]);
+
+  const item = store.singleItem;
+
+  // Construye URL para la imagen
+  const getImageUrl = (type, uid) => {
+    const imgType = type === "people" ? "characters" : type;
+    return `https://starwars-visualguide.com/assets/img/${imgType}/${uid}.jpg`;
+  };
 
   return (
-    <div className="container text-center">
-      {/* Display the title of the todo element dynamically retrieved from the store using theId. */}
-      <h1 className="display-4">Todo: {singleTodo?.title}</h1>
-      <hr className="my-4" />  {/* A horizontal rule for visual separation. */}
-
-      {/* A Link component acts as an anchor tag but is used for client-side routing to prevent page reloads. */}
-      <Link to="/">
-        <span className="btn btn-primary btn-lg" href="#" role="button">
-          Back home
-        </span>
-      </Link>
+    <div className="container mt-4">
+      {!item ? (
+        <p>Cargando detalles...</p>
+      ) : (
+        <div className="row">
+          <div className="col-md-4">
+            <img
+              src={getImageUrl(type, uid)}
+              alt={item.properties.name}
+              className="img-fluid rounded"
+              onError={(e) =>
+                (e.target.src = "https://starwars-visualguide.com/assets/img/big-placeholder.jpg")
+              }
+            />
+          </div>
+          <div className="col-md-8">
+            <h2>{item.properties.name}</h2>
+            <ul className="list-group list-group-flush mt-3">
+              {Object.entries(item.properties).map(([key, value], index) => (
+                <li key={index} className="list-group-item">
+                  <strong>{key.replace("_", " ")}:</strong> {value}
+                </li>
+              ))}
+            </ul>
+            <div className="mt-3">
+              <Link to="/" className="btn btn-outline-primary">
+                Volver al inicio
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
-};
-
-// Use PropTypes to validate the props passed to this component, ensuring reliable behavior.
-Single.propTypes = {
-  // Although 'match' prop is defined here, it is not used in the component.
-  // Consider removing or using it as needed.
-  match: PropTypes.object
 };

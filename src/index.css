@@ -1,0 +1,23 @@
+/* Elimina margen y scroll innecesario */
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background-color: #000;
+  color: #fff;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Opcional: ayuda a depurar el layout si algo vibra */
+* {
+  box-sizing: border-box;
+}
+
+/* Estética general */
+a {
+  color: inherit;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
