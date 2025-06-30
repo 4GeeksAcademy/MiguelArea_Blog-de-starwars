@@ -1,90 +1,109 @@
 import { useEffect } from "react";
 import useGlobalReducer from "../hooks/useGlobalReducer";
 import { Link } from "react-router-dom";
+import { CardNave } from "../components/CardNave";
 
 export const Home = () => {
   const { store, actions } = useGlobalReducer();
 
   useEffect(() => {
-    actions.getPeople();
-    actions.getPlanets();
-    actions.getVehicles();
+    if (store.people.length === 0) actions.getPeople();
+    if (store.planets.length === 0) actions.getPlanets();
+    if (store.vehicles.length === 0) actions.getVehicles();
   }, []);
 
-  const getImageUrl = (type, uid) => {
-    const imgType = type === "people" ? "characters" : type;
-    return `https://starwars-visualguide.com/assets/img/${imgType}/${uid}.jpg`;
-  };
+  const Card = ({ item, type }) => {
+    const isFavorite = store.favorites.some(
+      (fav) => fav.uid === item.uid && fav.type === type
+    );
 
-  const Card = ({ item, type }) => (
-    <div className="card h-100 bg-dark text-light border-light shadow-sm">
-      <img
-        src={getImageUrl(type, item.uid)}
-        className="card-img-top"
-        alt={item.name}
-        onError={(e) =>
-          (e.target.src = "https://starwars-visualguide.com/assets/img/big-placeholder.jpg")
-        }
-      />
-      <div className="card-body d-flex flex-column justify-content-between">
-        <div>
-          <h5 className="card-title">{item.name}</h5>
-          {type === "people" && (
-            <p className="card-text small">
-              Gender: {item.gender || "n/a"}<br />
-              Eye Color: {item.eye_color || "n/a"}<br />
-              Birth Year: {item.birth_year || "n/a"}
-            </p>
-          )}
+    return (
+      <div className="card" style={{ width: "18rem" }}>
+        <div
+          style={{
+            width: "100%",
+            height: "200px",
+            backgroundColor: "#e0e0e0",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            fontSize: "1.5rem",
+            color: "#999",
+            fontFamily: "Arial, sans-serif"
+          }}
+        >
+          400 x 200
         </div>
-        <div className="d-flex justify-content-between align-items-center">
-          <Link to={`/single/${type}/${item.uid}`} className="btn btn-outline-light btn-sm">
-            Learn more!
-          </Link>
-          <button
-            className="btn btn-outline-warning btn-sm"
-            onClick={() =>
-              actions.addFavorite({ uid: item.uid, name: item.name, type })
-            }
-          >
-            <i className="fa fa-heart" />
-          </button>
+
+        <div className="card-body">
+          <h5 className="card-title">{item.name}</h5>
+
+          <div className="d-flex justify-content-between align-items-center mt-3">
+            <Link
+              to={`/single/${type}/${item.uid}`}
+              className="btn btn-primary btn-sm"
+            >
+              Learn more!
+            </Link>
+            <button
+              className={`btn btn-sm ${isFavorite ? "btn-danger" : "btn-warning"}`}
+              onClick={() => {
+                if (isFavorite) {
+                  actions.removeFavorite(item.uid, type);
+                } else {
+                  actions.addFavorite({
+                    uid: item.uid,
+                    name: item.name,
+                    type,
+                  });
+                }
+              }}
+            >
+              <i className={`fa ${isFavorite ? "fa-trash" : "fa-heart"}`} />
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className="container py-5">
       {/* Characters */}
-      <h2 className="text-warning mb-3">Characters</h2>
-      <div className="row g-4">
-        {store.people.map((item) => (
-          <div key={item.uid} className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex">
-            <Card item={item} type="people" />
+      {store.people.length > 0 && (
+        <>
+          <h2 className="text-danger fw-bold mb-3">Characters</h2>
+          <div className="scroll-row">
+            {store.people.map((item) => (
+              <Card key={item.uid} item={item} type="people" />
+            ))}
           </div>
-        ))}
-      </div>
+        </>
+      )}
 
       {/* Planets */}
-      <h2 className="text-warning mt-5 mb-3">Planets</h2>
-      <div className="row g-4">
-        {store.planets.map((item) => (
-          <div key={item.uid} className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex">
-            <Card item={item} type="planets" />
+      {store.planets.length > 0 && (
+        <>
+          <h2 className="text-danger fw-bold mt-5 mb-3">Planets</h2>
+          <div className="scroll-row">
+            {store.planets.map((item) => (
+              <Card key={item.uid} item={item} type="planets" />
+            ))}
           </div>
-        ))}
-      </div>
+        </>
+      )}
 
       {/* Vehicles */}
-      <h2 className="text-warning mt-5 mb-3">Vehicles</h2>
-      <div className="row g-4">
-        {store.vehicles.map((item) => (
-          <div key={item.uid} className="col-12 col-sm-6 col-md-4 col-lg-3 d-flex">
-            <Card item={item} type="vehicles" />
+      {store.vehicles.length > 0 && (
+        <>
+          <h2 className="text-danger fw-bold mt-5 mb-3">Vehicles</h2>
+          <div className="scroll-row">
+            {store.vehicles.map((item) => (
+              <CardNave key={item.uid} name={item.name} uid={item.uid} />
+            ))}
           </div>
-        ))}
-      </div>
+        </>
+      )}
     </div>
   );
 };
