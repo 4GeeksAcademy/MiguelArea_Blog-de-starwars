@@ -5,7 +5,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       planets: [],
       vehicles: [],
       favorites: [],
-      singleItem: null
+      singleItem: null,
     },
 
     actions: {
@@ -22,7 +22,7 @@ const getState = ({ getStore, getActions, setStore }) => {
               return {
                 ...detailData.result.properties,
                 uid: p.uid,
-                name: p.name
+                name: p.name,
               };
             })
           );
@@ -47,7 +47,7 @@ const getState = ({ getStore, getActions, setStore }) => {
               return {
                 ...detailData.result.properties,
                 uid: p.uid,
-                name: p.name
+                name: p.name,
               };
             })
           );
@@ -72,7 +72,7 @@ const getState = ({ getStore, getActions, setStore }) => {
               return {
                 ...detailData.result.properties,
                 uid: p.uid,
-                name: p.name
+                name: p.name,
               };
             })
           );
@@ -109,10 +109,10 @@ const getState = ({ getStore, getActions, setStore }) => {
         setStore({
           favorites: store.favorites.filter(
             (fav) => fav.uid !== uid || fav.type !== type
-          )
+          ),
         });
-      }
-    }
+      },
+    },
   };
 };
 

@@ -1,21 +1,18 @@
-import { useEffect, useState } from "react";
-import useGlobalReducer from "../hooks/useGlobalReducer";
+import React, { useContext, useEffect, useState } from "react";
+import { Context } from "../store/appContext";
 import { CardCharacter } from "../components/CardCharacter";
 import { CardPlanet } from "../components/CardPlanet";
 import { CardNave } from "../components/CardNave";
 
-export const Home = () => {
-  const { store, actions } = useGlobalReducer();
+const Home = () => {
+  const { store, actions } = useContext(Context);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadData = async () => {
-      if (store.people.length === 0) await actions.getPeople();
-      if (store.planets.length === 0) await actions.getPlanets();
-      if (store.vehicles.length === 0) await actions.getVehicles();
+      await actions.loadAllData();
       setLoading(false);
     };
-
     loadData();
   }, []);
 
@@ -23,12 +20,15 @@ export const Home = () => {
     return (
       <div className="container py-5 text-center">
         <h3 className="text-secondary">Cargando datos del universo...</h3>
+        <p className="text-muted">
+          Hecho con ❤️ por <a href="https://4geeks.com">4Geeks Academy</a>
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="container py-5">
+    <div className="container py-4">
       {/* Characters */}
       {store.people.length > 0 && (
         <>
@@ -67,3 +67,5 @@ export const Home = () => {
     </div>
   );
 };
+
+export default Home;

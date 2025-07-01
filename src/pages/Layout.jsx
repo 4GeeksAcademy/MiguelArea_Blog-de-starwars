@@ -1,16 +1,18 @@
-import { Outlet, useLocation } from "react-router-dom";
-import ScrollToTop from "../components/ScrollToTop";
-import { Navbar } from "../components/Navbar";
-import { Footer } from "../components/Footer";
+import React from "react";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
+import { Outlet } from "react-router-dom";
 
-export const Layout = () => {
-    const location = useLocation(); // <- Importante
-
-    return (
-        <ScrollToTop location={location}>
-            <Navbar />
-            <Outlet />
-            <Footer />
-        </ScrollToTop>
-    );
+const Layout = () => {
+  return (
+    <>
+      <Navbar />
+      <div className="container mt-4">
+        <Outlet />
+      </div>
+      <Footer />
+    </>
+  );
 };
+
+export default Layout;
