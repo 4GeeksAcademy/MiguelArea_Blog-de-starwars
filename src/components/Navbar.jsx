@@ -33,7 +33,7 @@ export const Navbar = () => {
                   className="dropdown-item d-flex justify-content-between align-items-center"
                 >
                   <Link to={`/single/${fav.type}/${fav.uid}`} className="text-decoration-none me-2">
-                    {fav.name}
+                    {fav.name} (UID: {fav.uid})
                   </Link>
                   <button
                     onClick={() => actions.removeFavorite(fav.uid, fav.type)}

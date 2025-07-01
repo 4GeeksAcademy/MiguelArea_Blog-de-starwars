@@ -12,13 +12,18 @@ export const Demo = () => {
           <li className="list-group-item">No hay favoritos aún.</li>
         ) : (
           store.favorites.map((item, index) => (
-            <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
+            <li
+              key={index}
+              className="list-group-item d-flex justify-content-between align-items-center"
+            >
               <Link to={`/single/${item.type}/${item.uid}`}>
-                {item.name} ({item.type})
+                {item.name} (UID: {item.uid})
               </Link>
               <button
                 className="btn btn-sm btn-danger"
-                onClick={() => dispatch({ type: "remove_favorite", payload: { uid: item.uid, type: item.type } })}
+                onClick={() =>
+                  dispatch({ type: "remove_favorite", payload: { uid: item.uid, type: item.type } })
+                }
               >
                 Eliminar
               </button>

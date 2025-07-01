@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-export const CardNave = ({ name, uid }) => {
+export const CardCharacter = ({ name, uid }) => {
   return (
     <div className="card" style={{ width: "18rem" }}>
       <div
@@ -19,10 +19,10 @@ export const CardNave = ({ name, uid }) => {
         400 x 200
       </div>
       <div className="card-body">
-        <h5 className="card-title">Nave: {name}</h5>
-        <p className="card-text">Info nave.</p>
-        <Link to={`/single/vehicles/${uid}`} className="btn btn-primary">
-          Ver {uid}
+        <h5 className="card-title">Name: {name}</h5>
+        <p className="card-text">UID: {uid}</p>
+        <Link to={`/single/people/${uid}`} className="btn btn-primary btn-sm">
+          Learn more!
         </Link>
       </div>
     </div>

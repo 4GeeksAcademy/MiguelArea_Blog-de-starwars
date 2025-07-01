@@ -13,6 +13,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         try {
           const res = await fetch("https://www.swapi.tech/api/people");
           const data = await res.json();
+          console.log("🧠 People list:", data.results);
 
           const detailed = await Promise.all(
             data.results.map(async (p) => {
@@ -26,9 +27,10 @@ const getState = ({ getStore, getActions, setStore }) => {
             })
           );
 
+          console.log("✅ Detailed People:", detailed);
           setStore({ people: detailed });
         } catch (error) {
-          console.error("Error fetching people:", error);
+          console.error("❌ Error fetching people:", error);
         }
       },
 
@@ -36,6 +38,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         try {
           const res = await fetch("https://www.swapi.tech/api/planets");
           const data = await res.json();
+          console.log("🪐 Planets list:", data.results);
 
           const detailed = await Promise.all(
             data.results.map(async (p) => {
@@ -49,9 +52,10 @@ const getState = ({ getStore, getActions, setStore }) => {
             })
           );
 
+          console.log("✅ Detailed Planets:", detailed);
           setStore({ planets: detailed });
         } catch (error) {
-          console.error("Error fetching planets:", error);
+          console.error("❌ Error fetching planets:", error);
         }
       },
 
@@ -59,6 +63,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         try {
           const res = await fetch("https://www.swapi.tech/api/vehicles");
           const data = await res.json();
+          console.log("🚀 Vehicles list:", data.results);
 
           const detailed = await Promise.all(
             data.results.map(async (p) => {
@@ -72,9 +77,10 @@ const getState = ({ getStore, getActions, setStore }) => {
             })
           );
 
+          console.log("✅ Detailed Vehicles:", detailed);
           setStore({ vehicles: detailed });
         } catch (error) {
-          console.error("Error fetching vehicles:", error);
+          console.error("❌ Error fetching vehicles:", error);
         }
       },
 
@@ -84,7 +90,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           const data = await res.json();
           setStore({ singleItem: data.result });
         } catch (error) {
-          console.error("Error fetching single item:", error);
+          console.error("❌ Error fetching single item:", error);
         }
       },
 
