@@ -1,17 +1,21 @@
 import { Link } from "react-router-dom";
 import useGlobalReducer from "../hooks/useGlobalReducer";
 
-export const Navbar = () => {
+const Navbar = () => {
   const { store, actions } = useGlobalReducer();
 
+  const handleRemoveFavorite = (uid, type) => {
+    actions.removeFavorite({ uid, type });
+  };
+
   return (
-    <nav className="navbar navbar-dark bg-dark px-4">
-      <div className="container-fluid d-flex justify-content-between">
+    <nav className="navbar navbar-light bg-light mb-3">
+      <div className="container d-flex justify-content-between">
         <Link to="/" className="navbar-brand">
           <img
             src="https://upload.wikimedia.org/wikipedia/commons/6/6c/Star_Wars_Logo.svg"
             alt="Star Wars"
-            style={{ height: 40 }}
+            style={{ height: "40px" }}
           />
         </Link>
 
@@ -20,26 +24,29 @@ export const Navbar = () => {
             className="btn btn-primary dropdown-toggle"
             type="button"
             data-bs-toggle="dropdown"
+            aria-expanded="false"
           >
-            Favorites {store.favorites.length > 0 ? `(${store.favorites.length})` : ""}
+            Favorites{" "}
+            <span className="badge bg-secondary">{store.favorites.length}</span>
           </button>
           <ul className="dropdown-menu dropdown-menu-end">
             {store.favorites.length === 0 ? (
-              <li className="dropdown-item text-muted">Empty</li>
+              <li className="dropdown-item text-muted">No favorites yet</li>
             ) : (
               store.favorites.map((fav, index) => (
-                <li
-                  key={index}
-                  className="dropdown-item d-flex justify-content-between align-items-center"
-                >
-                  <Link to={`/single/${fav.type}/${fav.uid}`} className="text-decoration-none me-2">
-                    {fav.name} (UID: {fav.uid})
+                <li key={index} className="dropdown-item d-flex justify-content-between align-items-center">
+                  <Link
+                    to={`/single/${fav.type}/${fav.uid}`}
+                    className="text-decoration-none me-2"
+                  >
+                    {fav.name}
                   </Link>
                   <button
-                    onClick={() => actions.removeFavorite(fav.uid, fav.type)}
-                    className="btn btn-sm btn-danger"
+                    className="btn btn-sm btn-outline-danger p-1"
+                    onClick={() => handleRemoveFavorite(fav.uid, fav.type)}
+                    title="Remove"
                   >
-                    <i className="fa fa-trash" />
+                    🗑️
                   </button>
                 </li>
               ))
@@ -50,3 +57,5 @@ export const Navbar = () => {
     </nav>
   );
 };
+
+export default Navbar;

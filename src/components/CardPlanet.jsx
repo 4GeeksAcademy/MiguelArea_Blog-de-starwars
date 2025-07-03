@@ -1,6 +1,13 @@
 import { Link } from "react-router-dom";
+import useGlobalReducer from "../hooks/useGlobalReducer";
 
 export const CardPlanet = ({ name, uid }) => {
+  const { actions } = useGlobalReducer();
+
+  const handleFavorite = () => {
+    actions.toggleFavorite({ name, uid, type: "planets" });
+  };
+
   return (
     <div className="card" style={{ width: "18rem" }}>
       <div
@@ -12,8 +19,7 @@ export const CardPlanet = ({ name, uid }) => {
           justifyContent: "center",
           alignItems: "center",
           fontSize: "1.5rem",
-          color: "#999",
-          fontFamily: "Arial, sans-serif"
+          color: "#999"
         }}
       >
         400 x 200
@@ -24,6 +30,13 @@ export const CardPlanet = ({ name, uid }) => {
         <Link to={`/single/planets/${uid}`} className="btn btn-primary btn-sm">
           Learn more!
         </Link>
+        <button
+          onClick={handleFavorite}
+          className="btn btn-outline-warning btn-sm float-end ms-2"
+          title="Add to favorites"
+        >
+          ❤️
+        </button>
       </div>
     </div>
   );

@@ -1,12 +1,16 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import Layout from "./pages/Layout.jsx"; 
-import injectContext from "./store/appContext.jsx";
-
-const AppWithContext = injectContext(Layout);
+import { BrowserRouter } from "react-router-dom";
+import { StoreProvider } from "./hooks/useGlobalReducer"; // <- Aquí está el hook con el contexto
+import Layout from "./pages/Layout";
+import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <AppWithContext />
+    <StoreProvider>
+      <BrowserRouter>
+        <Layout />
+      </BrowserRouter>
+    </StoreProvider>
   </React.StrictMode>
 );
